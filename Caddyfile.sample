@@ -1,0 +1,44 @@
+# ==============================================================================
+# Пример конфигурации Caddyfile для интеграции лендинга VEXX Host
+# ==============================================================================
+
+# Вариант 1: Через Docker Compose Reverse Proxy (Рекомендуется)
+# Наш докер-контейнер настроен на порт 8085 (в docker-compose.yml),
+# чтобы полностью исключить любые конфликты с вашим remnawave_bot (порт 8080)
+your-promo-domain.com, www.your-promo-domain.com {
+    # Сжатие трафика (Gzip и Zstd) для мгновенной загрузки страниц
+    encode gzip zstd
+
+    # Проксируем входящие запросы на порт лендинга на хост-машине
+    reverse_proxy localhost:8085
+
+    # Защитные HTTP-заголовки
+    header {
+        -Server
+        X-Content-Type-Options "nosniff"
+        X-Frame-Options "DENY"
+        Referrer-Policy "strict-origin-when-cross-origin"
+    }
+}
+
+# Вариант 2: Раздача статической папки напрямую через Caddy (Альтернатива без докера)
+# 1. Соберите проект локально: npm run build
+# 2. Перенесите содержимое папки dist/ на сервер в /var/www/vexx_landing/
+# your-promo-domain.com, www.your-promo-domain.com {
+#     encode gzip zstd
+#     root * /var/www/vexx_landing/dist
+#     file_server
+#     try_files {path} {path}/ /index.html
+#
+#     # Кэширование статических ресурсов (картинки, шрифты, стили)
+#     @static path *.js *.css *.woff *.woff2 *.ttf *.ico *.png *.jpg *.jpeg *.svg *.webp *.gif
+#     header @static Cache-Control "public, max-age=31536000, immutable"
+#
+#     # HTML без кэша (чтобы SPA-обновления накатывались мгновенно)
+#     @html path *.html /
+#     header @html Cache-Control "no-cache, must-revalidate"
+#
+#     header {
+#         -Server
+#     }
+# }
