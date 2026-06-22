@@ -497,6 +497,33 @@ export default function App() {
           </div>
         </section>
 
+        {/* Reviews Section */}
+        <section className="py-24 bg-gradient-to-b from-[#0a0a0a] to-[#111] border-t border-b border-white/5 relative z-10">
+          <div className="container mx-auto px-4">
+            <div className="text-center mb-16">
+              <h2 className="text-3xl md:text-4xl font-bold tracking-tighter max-w-3xl mx-auto leading-tight">
+                {siteContent.reviews.title}
+              </h2>
+            </div>
+            <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+              {siteContent.reviews.items.map((item, idx) => (
+                <div 
+                  key={idx}
+                  className="bg-[#171616] p-8 rounded-2xl border border-white/5 flex flex-col justify-between hover:border-[var(--color-accent)]/30 transition-all duration-300"
+                >
+                  <p className="text-[var(--color-text-secondary)] italic leading-relaxed mb-6">
+                    "{item.text}"
+                  </p>
+                  <div>
+                    <h4 className="font-bold text-white text-md">{item.name}</h4>
+                    <p className="text-xs text-[var(--color-accent)] mt-0.5">{item.role}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
         {/* Locations Section */}
         <section id="locations" className="py-24 relative z-10">
           <ServerLocations
@@ -518,11 +545,13 @@ export default function App() {
             <p className="text-[var(--color-text-secondary)] text-sm">
               © {new Date().getFullYear()} {siteContent.footer.copyright}
             </p>
-            <div className="flex items-center gap-4 text-sm text-[var(--color-text-secondary)]">
+            <div className="flex flex-wrap items-center gap-4 text-sm text-[var(--color-text-secondary)]">
               {siteContent.footer.links.map((link, idx) => (
-                <a key={idx} href={link.href} className="hover:text-[var(--color-accent)] transition">{link.label}</a>
+                <a key={idx} href={link.href} target="_blank" rel="noopener noreferrer" className="hover:text-[var(--color-accent)] transition">{link.label}</a>
               ))}
-              <a href={`mailto:${siteContent.footer.supportEmail}`} className="hover:text-[var(--color-accent)] transition">{siteContent.footer.supportEmail}</a>
+              <a href={siteContent.footer.supportTelegram} target="_blank" rel="noopener noreferrer" className="hover:text-[var(--color-accent)] transition">
+                {siteContent.footer.supportText || "@vexx_support"}
+              </a>
             </div>
           </div>
         </footer>
